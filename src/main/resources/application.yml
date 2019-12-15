@@ -1,0 +1,13 @@
+server:
+  port: 58080
+
+spring:
+  application:
+    name: causality-diagram
+  mvc:
+    view:
+      prefix: /WEB-INF/pages/
+      suffix: .jsp
+    static-path-pattern: /static/**
+logging:
+  config: classpath:logback.xml

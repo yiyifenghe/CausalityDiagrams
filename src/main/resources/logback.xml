@@ -1,0 +1,60 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<!-- 日志输出路径 -->
+	<property name="logging.path" value="/opt/logs/causalityDiagrams"/>
+	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging.path}/info-%d{yyyyMMdd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%-5level] [%X{requestId}] %date{ISO8601} [%thread]| [%logger{36}.%M:%line] %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging.path}/error-%d{yyyyMMdd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%-5level] [%X{requestId}] %date{ISO8601} [%thread]| [%logger{36}.%M:%line] %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="TRACE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>TRACE</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging.path}/trace-%d{yyyyMMdd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%-5level] [%X{requestId}] %date{ISO8601} [%thread]| [%logger{36}.%M:%line] %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<!-- hibernate日志输入 -->
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+	<!-- <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE" /> -->
+	<logger name="org.hibernate.SQL" level="INFO" />
+	<logger name="org.hibernate.engine.QueryParameters" level="INFO" />
+	<logger name="org.hibernate.engine.query.HQLQueryPlan" level="INFO" />
+
+	<root level="INFO">
+		<appender-ref ref="INFO_FILE"/>
+		<appender-ref ref="ERROR_FILE" />
+		<appender-ref ref="TRACE_FILE" />
+	</root>
+
+</configuration>
